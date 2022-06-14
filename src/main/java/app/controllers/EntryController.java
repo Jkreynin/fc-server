@@ -40,9 +40,7 @@ public class EntryController {
 
     @PostMapping("/entries/filters")
     public List<Entry> findEntryWithFilters(@RequestBody EntryFilter entry) {
-        LocalDateTime startOfDay = entry.getStartTime().truncatedTo(ChronoUnit.DAYS);
-        LocalDateTime nextDay = startOfDay.plusDays(1);
-        return entryRepository.findByStartTimeBetween(startOfDay, nextDay);
+        return entryRepository.findByStartTimeBetween(entry.getStartTime().truncatedTo(ChronoUnit.DAYS), entry.getEndTime().truncatedTo(ChronoUnit.DAYS));
     }
 
     // get employee by id rest api
