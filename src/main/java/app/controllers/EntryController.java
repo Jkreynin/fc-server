@@ -1,9 +1,12 @@
 package app.controllers;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.models.EntryFilter;
 import app.repositories.EntryRepository;
 import app.models.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +28,35 @@ public class EntryController {
     @Autowired
     private EntryRepository entryRepository;
 
-    // get all employees
-    @GetMapping("/employees")
-    public List<Entry> getAllEmployees() {
+    @GetMapping("/entries")
+    public List<Entry> getAllEntries() {
         return entryRepository.findAll();
     }
 
-    // create employee rest api
-    @PostMapping("/employees")
-    public Entry createEmployee(@RequestBody Entry employee) {
-        return entryRepository.save(employee);
+    @PostMapping("/entries")
+    public Entry createEntry(@RequestBody Entry entry) {
+        return entryRepository.save(entry);
+    }
+
+    @PostMapping("/entries/filters")
+    public List<Entry> findEntryWithFilters(@RequestBody EntryFilter entry) {
+        LocalDateTime startOfDay = entry.getStartTime().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime nextDay = startOfDay.plusDays(1);
+        return entryRepository.findByStartTimeBetween(startOfDay, nextDay);
     }
 
     // get employee by id rest api
-    @GetMapping("/employees/{id}")
-    public ResponseEntity<Entry> getEmployeeById(@PathVariable Long id) {
-//        Entry employee = entryRepository.findById(id)
-//                .orElseThrow(() -> new Exception("Employee not exist with id :" + id));
-        return ResponseEntity.ok(new Entry());
+    @GetMapping("/entries/{id}")
+    public ResponseEntity<Entry> getEntryById(@PathVariable Long id) throws Exception {
+        Entry entry = entryRepository.findById(id)
+                .orElseThrow(() -> new Exception("Employee not exist with id :" + id));
+        return ResponseEntity.ok(entry);
     }
 
     // update employee rest api
 
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Entry> updateEmployee(@PathVariable Long id, @RequestBody Entry entry) {
+    public ResponseEntity<Entry> updateEntry(@PathVariable Long id, @RequestBody Entry entry) {
 //        Employee employee = entryRepository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
 //
@@ -63,7 +71,7 @@ public class EntryController {
 
     // delete employee rest api
     @DeleteMapping("/employees/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteEntry(@PathVariable Long id) {
 //        Employee employee = entryRepository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
 //
