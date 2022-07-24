@@ -2,13 +2,17 @@ package app.controllers;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import app.models.EntryFilter;
+import app.models.*;
+import app.repositories.ActivityTypeRepository;
 import app.repositories.EntryRepository;
-import app.models.Entry;
+import app.repositories.StatsRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +32,28 @@ public class EntryController {
     @Autowired
     private EntryRepository entryRepository;
 
+    @Autowired
+    private StatsRepository statsRepository;
+
+    @Autowired
+    private ActivityTypeRepository activityTypeRepository;
+
+    @Autowired
+    private ObjectMapper mapper;
+
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
+    }
+
+    @GetMapping("/activityTypes")
+    public List<ActivityType> getAllActivityTypes() {
+        return activityTypeRepository.findAll();
+    }
+
+    @PostMapping("/stats")
+    public Stats getStats(@RequestBody StatsFilter statsFilter) {
+        return statsRepository.getStats(statsFilter.getStartTime().toString());
     }
 
     @PostMapping("/entries")
@@ -39,8 +62,8 @@ public class EntryController {
     }
 
     @PostMapping("/entries/filters")
-    public List<Entry> findEntryWithFilters(@RequestBody EntryFilter entry) {
-        return entryRepository.findByStartTimeBetween(entry.getStartTime().truncatedTo(ChronoUnit.DAYS), entry.getEndTime().truncatedTo(ChronoUnit.DAYS));
+    public List<Entry> findEntryWithFilters(@RequestBody EntryFilter entryFilter) {
+        return entryRepository.findByStartTimeBetween(entryFilter.getStartTime().truncatedTo(ChronoUnit.DAYS), entryFilter.getEndTime().truncatedTo(ChronoUnit.DAYS));
     }
 
     // get employee by id rest api

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface EntryRepository extends JpaRepository<Entry, Long> {
+public interface EntryRepository extends JpaRepository<Entry, Long>{
     List<Entry> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 
 }
