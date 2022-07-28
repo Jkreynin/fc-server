@@ -30,12 +30,12 @@ public class Entry {
     private long id;
 
     @Column(name = "start_time")
-    @JsonProperty("start-time")
+    @JsonProperty("startTime")
     private LocalDateTime startTime;
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "json", name = "data")
-    private Map<String, String> data;
+    private Map<String, Object> data;
 
     @Type(type = "entry_type_enum")
     @Enumerated(EnumType.STRING)
@@ -59,7 +59,7 @@ public class Entry {
         return startTime;
     }
 
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 

@@ -23,37 +23,37 @@ public class StatsRepositoryImpl implements StatsRepository {
     public Stats getStats(String start_date) {
         String rawSQL = """
                 WITH today_avg_weight as (
-                SELECT coalesce(AVG((data ->'value')::double precision),0) today_avg_weight
+                SELECT coalesce(AVG((data ->'weight')::double precision),0) today_avg_weight
                 	FROM core.entries
                 	WHERE type = 'Weight' AND start_time >= DATE_TRUNC('day',@date::timestamp)
                 ),
                                 
                 today_total_calories as (
-                SELECT coalesce(SUM((data ->'value')::double precision),0) today_total_calories
+                SELECT coalesce(SUM((data ->'score')::double precision),0) today_total_calories
                 	FROM core.entries
                 	WHERE type = 'Meal' AND start_time >= DATE_TRUNC('day',@date::timestamp)),
                                 
                 this_week_total_calories as (
-                SELECT coalesce(SUM((data ->'value')::double precision),0) this_week_total_calories
+                SELECT coalesce(SUM((data ->'score')::double precision),0) this_week_total_calories
                 	FROM core.entries
                 	WHERE type ='Meal' and date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - '1 day'::interval <= start_time AND
                 	start_time < date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - '1 day'::interval + '1 week'::interval),
                                 
                 this_week_avg_weight as (
-                SELECT coalesce(AVG((data ->'value')::double precision),0) this_week_avg_weight
+                SELECT coalesce(AVG((data ->'weight')::double precision),0) this_week_avg_weight
                 	FROM core.entries
                 	WHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - '1 day'::interval <= start_time AND
                 	start_time < date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - '1 day'::interval + '1 week'::interval),
                 	
                 	
                 last_week_avg_weight as (
-                SELECT coalesce(AVG((data ->'value')::double precision),0) last_week_avg_weight
+                SELECT coalesce(AVG((data ->'weight')::double precision),0) last_week_avg_weight
                 	FROM core.entries
                 	WHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) - interval '1 week') - interval '1 day' <= start_time AND
                 	start_time < date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - interval '1 day' ),
                 	
                 last_week_total_calories as (
-                SELECT coalesce(SUM((data ->'value')::double precision),0) last_week_total_calories
+                SELECT coalesce(SUM((data ->'score')::double precision),0) last_week_total_calories
                 	FROM core.entries
                 	WHERE type = 'Meal' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) - interval '1 week') - interval '1 day' <= start_time AND
                 	start_time < date_trunc('week', DATE_TRUNC('day',@date::timestamp)) - interval '1 day' )

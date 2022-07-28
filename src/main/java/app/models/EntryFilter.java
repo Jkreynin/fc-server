@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public class EntryFilter {
-    @JsonProperty("start-time")
+    @JsonProperty("startTime")
     private LocalDateTime startTime;
 
-    @JsonProperty("end-time")
+    @JsonProperty("endTime")
     private LocalDateTime endTime;
 
     public LocalDateTime getStartTime() {

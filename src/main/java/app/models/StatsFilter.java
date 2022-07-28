@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public class StatsFilter {
-    @JsonProperty("start-time")
+    @JsonProperty("startTime")
     private LocalDateTime startTime;
 
     public LocalDateTime getStartTime() {

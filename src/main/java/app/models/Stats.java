@@ -4,25 +4,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Stats {
-    @JsonProperty("today-calories")
+    @JsonProperty("todayCalories")
     private int todayCalories;
-    @JsonProperty("today-weight")
+    @JsonProperty("todayWeight")
     private double todayWeight;
-    @JsonProperty("this-week-total-calories")
+    @JsonProperty("thisWeekTotalCalories")
     private int thisWeekTotalCalories;
-    @JsonProperty("this-week-average-weight")
-    private double thisWeekAverageCalories;
-    @JsonProperty("last-week-total-calories")
+    @JsonProperty("thisWeekAverageWeight")
+    private double thisWeekAverageWeight;
+    @JsonProperty("lastWeekTotalCalories")
     private int lastWeekTotalCalories;
-    @JsonProperty("last-week-average-weight")
+    @JsonProperty("lastWeekAverageWeight")
     private double lastWeekAverageWeight;
 
-    public Stats(int todayCalories, double todayWeight, int thisWeekTotalCalories, double thisWeekAverageCalories, int lastWeekTotalCalories, double lastWeekAverageWeight) {
+    public Stats(int todayCalories, double todayWeight, int thisWeekTotalCalories, double thisWeekAverageCalories, int thisWeekAverageWeight, double lastWeekAverageWeight) {
         this.todayCalories = todayCalories;
         this.todayWeight = todayWeight;
         this.thisWeekTotalCalories = thisWeekTotalCalories;
-        this.thisWeekAverageCalories = thisWeekAverageCalories;
-        this.lastWeekTotalCalories = lastWeekTotalCalories;
+        this.thisWeekAverageWeight = thisWeekAverageCalories;
+        this.lastWeekTotalCalories = thisWeekAverageWeight;
         this.lastWeekAverageWeight = lastWeekAverageWeight;
     }
 
@@ -38,8 +38,8 @@ public class Stats {
         return thisWeekTotalCalories;
     }
 
-    public double getThisWeekAverageCalories() {
-        return thisWeekAverageCalories;
+    public double getThisWeekAverageWeight() {
+        return thisWeekAverageWeight;
     }
 
     public int getLastWeekTotalCalories() {
