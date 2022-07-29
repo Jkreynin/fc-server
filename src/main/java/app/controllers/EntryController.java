@@ -76,23 +76,20 @@ public class EntryController {
 
     // update employee rest api
 
-    @PutMapping("/employees/{id}")
-    public ResponseEntity<Entry> updateEntry(@PathVariable Long id, @RequestBody Entry entry) {
-//        Employee employee = entryRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
-//
-//        employee.setFirstName(entry.getFirstName());
-//        employee.setLastName(entry.getLastName());
-//        employee.setEmailId(entry.getEmailId());
-//
-//        Employee updatedEmployee = entryRepository.save(employee);
-//        return ResponseEntity.ok(updatedEmployee);
-        return ResponseEntity.ok(new Entry());
+    @PutMapping("/entries/{id}")
+    public ResponseEntity<Entry> updateEntry(@PathVariable Long id, @RequestBody UpdateEntry updateEntry) throws Exception {
+        Entry entry = entryRepository.findById(id)
+                .orElseThrow(() -> new Exception("Employee not exist with id :" + id));
+
+        entry.getData().put("durationInSeconds", updateEntry.getDurationInSeconds());
+        Entry updatedEntry = entryRepository.save(entry);
+
+        return ResponseEntity.ok(updatedEntry);
     }
 
     // delete employee rest api
-    @DeleteMapping("/employees/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteEntry(@PathVariable Long id) {
+//    @DeleteMapping("/employees/{id}")
+//    public ResponseEntity<Map<String, Boolean>> deleteEntry(@PathVariable Long id) {
 //        Employee employee = entryRepository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
 //
@@ -100,6 +97,6 @@ public class EntryController {
 //        Map<String, Boolean> response = new HashMap<>();
 //        response.put("deleted", Boolean.TRUE);
 //        return ResponseEntity.ok(response);
-        return ResponseEntity.ok(new HashMap<>());
-    }
+//        return ResponseEntity.ok(new HashMap<>());
+//    }
 }

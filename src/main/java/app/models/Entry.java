@@ -42,15 +42,6 @@ public class Entry {
     @Column(columnDefinition = "entry_type")
     private EntryType type;
 
-    public Entry() {
-
-    }
-
-    public Entry(LocalDateTime startTime) {
-        super();
-        this.startTime = startTime;
-    }
-
     public long getId() {
         return id;
     }
