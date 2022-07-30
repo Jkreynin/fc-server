@@ -13,18 +13,20 @@ import app.repositories.StatsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-//@CrossOrigin(origins = "http://localhost:4200")
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/")
 public class EntryController {
@@ -40,6 +42,9 @@ public class EntryController {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
@@ -63,7 +68,15 @@ public class EntryController {
 
     @PostMapping("/entries/filters")
     public List<Entry> findEntryWithFilters(@RequestBody EntryFilter entryFilter) {
-        return entryRepository.findByStartTimeBetween(entryFilter.getStartTime().truncatedTo(ChronoUnit.DAYS), entryFilter.getEndTime().truncatedTo(ChronoUnit.DAYS));
+        try (Session session = entityManager.unwrap(Session.class)) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Entry> cr = cb.createQuery(Entry.class);
+            Root<Entry> root = cr.from(Entry.class);
+
+            cr.select(root).where(cb.between(root.get("startTime"), entryFilter.getStartTime(), entryFilter.getEndTime())).orderBy(cb.desc(root.get("startTime")));
+            Query query = session.createQuery(cr);
+            return query.getResultList();
+        }
     }
 
     // get employee by id rest api

@@ -1,10 +1,8 @@
 package app.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
-import java.time.LocalDateTime;
-import java.util.Map;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "activity_types")

@@ -1,13 +1,13 @@
 package app.repositories;
 
 import app.models.Stats;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +18,7 @@ public class StatsRepositoryImpl implements StatsRepository {
 
     @PersistenceContext
     EntityManager entityManager;
+
 
     @Override
     public Stats getStats(String start_date) {
