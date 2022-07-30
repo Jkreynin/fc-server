@@ -14,9 +14,9 @@
 	<name>fc</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>18</java.version>
-		<maven.compiler.source>18</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
+		<java.version>14</java.version>
+		<maven.compiler.source>14</maven.compiler.source>
+		<maven.compiler.target>14</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -66,6 +66,7 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
 		</dependency>
 
 	</dependencies>
