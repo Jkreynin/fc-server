@@ -97,7 +97,7 @@ public class StatsRepositoryImpl implements StatsRepository {
         String rawSQL = "select start_time::date \"day\",\n" +
                 "ROUND(AVG((data->'weight')::double precision)::numeric,2) \"weight\" \n" +
                 "from core.entries\n" +
-                "where type='Weight' and start_time between @start_time::timestamp and @end_time::timestamp\n" +
+                "where type='Weight' and (start_time >= @start_time::timestamp and start_time <= @end_time::timestamp)\n" +
                 "group by 1\n" +
                 "order by 1\n";
 
