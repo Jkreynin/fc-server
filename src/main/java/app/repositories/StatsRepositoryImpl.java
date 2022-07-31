@@ -1,6 +1,7 @@
 package app.repositories;
 
 import app.models.Stats;
+import app.models.WeightByDay;
 import org.hibernate.Session;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
@@ -12,6 +13,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StatsRepositoryImpl implements StatsRepository {
@@ -84,5 +90,36 @@ public class StatsRepositoryImpl implements StatsRepository {
             });
         }
 
+    }
+
+    @Override
+    public List<WeightByDay>  getWeightByDay(String start_date, String end_date) {
+        String rawSQL = "select date_trunc('day', start_time) \"day\",\n" +
+                "ROUND(AVG((data->'weight')::double precision)::numeric,2) \"weight\" \n" +
+                "from core.entries\n" +
+                "where type='Weight' and start_time between @start_time::timestamp and @end_time::timestamp\n" +
+                "group by 1\n" +
+                "order by 1\n";
+
+        try (Session session = entityManager.unwrap(Session.class)) {
+
+            String finalQuery = rawSQL.replace("@start_time", String.format("'%s'", start_date))
+                    .replace("@end_time", String.format("'%s'", end_date));
+
+            return session.doReturningWork(connection -> {
+                // do something useful
+                try (PreparedStatement stmt = connection.prepareStatement(finalQuery)) {
+                    ResultSet rs = stmt.executeQuery();
+                    List<WeightByDay> values = new ArrayList<>();
+                    while (rs.next()) {
+                        values.add(new WeightByDay(
+                                rs.getString("day"),
+                                rs.getDouble("weight")));
+
+                    }
+                    return  values;
+                }
+            });
+        }
     }
 }

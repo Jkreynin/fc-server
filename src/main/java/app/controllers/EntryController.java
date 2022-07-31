@@ -79,6 +79,12 @@ public class EntryController {
         }
     }
 
+
+    @PostMapping("/weightByDay")
+    public List<WeightByDay> findWeightByDay(@RequestBody EntryFilter entryFilter) {
+        return statsRepository.getWeightByDay(entryFilter.getStartTime().toString(), entryFilter.getEndTime().toString());
+    }
+
     // get employee by id rest api
     @GetMapping("/entries/{id}")
     public ResponseEntity<Entry> getEntryById(@PathVariable Long id) throws Exception {
