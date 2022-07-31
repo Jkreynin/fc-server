@@ -94,7 +94,7 @@ public class StatsRepositoryImpl implements StatsRepository {
 
     @Override
     public List<WeightByDay>  getWeightByDay(String start_date, String end_date) {
-        String rawSQL = "select date_trunc('day', start_time) \"day\",\n" +
+        String rawSQL = "select start_time::date \"day\",\n" +
                 "ROUND(AVG((data->'weight')::double precision)::numeric,2) \"weight\" \n" +
                 "from core.entries\n" +
                 "where type='Weight' and start_time between @start_time::timestamp and @end_time::timestamp\n" +
