@@ -26,7 +26,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://main.dq50mv0dunfzc.amplifyapp.com"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://fc-web-app.s3-website.eu-central-1.amazonaws.com/"}
+)
 @RestController
 @RequestMapping("/api/v1/")
 public class EntryController {
