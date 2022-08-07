@@ -82,8 +82,8 @@ public class EntryController {
 
 
     @PostMapping("/weightByDay")
-    public List<WeightByDay> findWeightByDay(@RequestBody EntryFilter entryFilter) {
-        return statsRepository.getWeightByDay(entryFilter.getStartTime().toString(), entryFilter.getEndTime().toString());
+    public List<WeightByDay> findWeightByDay(@RequestBody WeightGraphFilter entryFilter) {
+        return statsRepository.getWeightByDay(entryFilter.getStartTime().toString(), entryFilter.getEndTime().toString(), entryFilter.getGraphType());
     }
 
     // get employee by id rest api
