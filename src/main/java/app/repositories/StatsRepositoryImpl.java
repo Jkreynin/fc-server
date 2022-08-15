@@ -42,27 +42,27 @@ public class StatsRepositoryImpl implements StatsRepository {
                 "                this_week_total_calories as (\n" +
                 "                SELECT coalesce(SUM((data ->'score')::double precision),0) this_week_total_calories\n" +
                 "                \tFROM core.entries\n" +
-                "                \tWHERE type ='Meal' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval <= start_time AND\n" +
-                "                \tstart_time <= DATE_TRUNC('day',@date::timestamp) - '1 day'::interval + '1 week'::interval),\n" +
+                "                \tWHERE type ='Meal' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval <= start_time::date AND\n" +
+                "                \tstart_time::date <= DATE_TRUNC('day',@date::timestamp) - '1 day'::interval + '1 week'::interval),\n" +
                 "                                \n" +
                 "                this_week_avg_weight as (\n" +
                 "                SELECT coalesce(AVG((data ->'weight')::double precision),0) this_week_avg_weight\n" +
                 "                \tFROM core.entries\n" +
-                "                \tWHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval <= start_time AND\n" +
-                "                \tstart_time <= DATE_TRUNC('day',@date::timestamp) - '1 day'::interval + '1 week'::interval),\n" +
+                "                \tWHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval <= start_time::date AND\n" +
+                "                \tstart_time::date <= DATE_TRUNC('day',@date::timestamp) - '1 day'::interval + '1 week'::interval),\n" +
                 "                \t\n" +
                 "                \t\n" +
                 "                last_week_avg_weight as (\n" +
                 "                SELECT coalesce(AVG((data ->'weight')::double precision),0) last_week_avg_weight\n" +
                 "                \tFROM core.entries\n" +
-                "                \tWHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval - '1 week'::interval <= start_time AND\n" +
-                "                \tstart_time <= date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '2 day'::interval),\n" +
+                "                \tWHERE type = 'Weight' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval - '1 week'::interval <= start_time::date AND\n" +
+                "                \tstart_time::date <= date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '2 day'::interval),\n" +
                 "                \t\n" +
                 "                last_week_total_calories as (\n" +
                 "                SELECT coalesce(SUM((data ->'score')::double precision),0) last_week_total_calories\n" +
                 "                \tFROM core.entries\n" +
-                "                \tWHERE type = 'Meal' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval - '1 week'::interval <= start_time AND\n" +
-                "                \tstart_time <= date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '2 day'::interval)\n" +
+                "                \tWHERE type = 'Meal' AND date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '1 day'::interval - '1 week'::interval <= start_time::date AND\n" +
+                "                \tstart_time::date <= date_trunc('week', DATE_TRUNC('day',@date::timestamp) + '1 day'::interval) - '2 day'::interval)\n" +
                 "                \t\n" +
                 "                \t\n" +
                 "                SELECT today_avg_weight, today_total_calories, this_week_total_calories, this_week_avg_weight, last_week_avg_weight, last_week_total_calories from today_avg_weight CROSS JOIN\n" +
@@ -97,7 +97,7 @@ public class StatsRepositoryImpl implements StatsRepository {
         String rawSQL;
 
         if (graph_type.equals("week")) {
-            rawSQL = "select start_time::date \"day\",\n" +
+            rawSQL = "select start_time \"day\",\n" +
                     "ROUND(AVG((data->'weight')::double precision)::numeric,2) \"weight\" \n" +
                     "from core.entries\n" +
                     "where type='Weight' and (start_time::date >= @start_time::date and start_time::date <= @end_time::date)\n" +
